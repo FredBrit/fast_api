@@ -79,4 +79,9 @@ source venv/bin/activate
 Далее запуск веб-сервера uvicorn с ключом --reload (автоматически перезагружать сервер при изменении кода)
 uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
+### Для возможности редактирования и сохраения файлов через vscode, может потребоваться накинуть прав на пользователя под которым создавалась папка в проекте
+whoami
+chown -R admin:admin /home/my_fastapi_app
+ls -la /home/my_fastapi_app
+
     
