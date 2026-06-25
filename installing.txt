@@ -79,6 +79,10 @@ source venv/bin/activate
 Далее запуск веб-сервера uvicorn с ключом --reload (автоматически перезагружать сервер при изменении кода)
 uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
+Проверка работы
+http://your-server-ip:8000/ — увидите {"message": "Hello World"}
+http://your-server-ip:8000/docs — автоматическая Swagger документация
+
 ### Для возможности редактирования и сохраения файлов через vscode, может потребоваться накинуть прав на пользователя под которым создавалась папка в проекте
 whoami
 chown -R admin:admin /home/my_fastapi_app
