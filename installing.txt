@@ -73,7 +73,7 @@ my_fastapi_app/
 
 ### Запуск проекта
 cd my_fastapi_app
-source venv/bin/activate
+source venv/bin/activate (редактировать файлы можно БЕЗ активации venv)
 
 Переходим в директорию, активириуем venv
 Далее запуск веб-сервера uvicorn с ключом --reload (автоматически перезагружать сервер при изменении кода)
