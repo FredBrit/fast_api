@@ -1,0 +1,65 @@
+### Подгружаем системные зависимости
+
+# RHEL
+dnf install python3-devel libpq-devel python3-virtualenv -y
+
+# Debian
+apt install python3-pip python3-venv python3-dev libpq-dev -y
+
+### Создание venv
+mkdir my_fastapi_app && cd my_fastapi_app
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+
+### Подгружем необходимые для асинхронной работы библиотеки (находясь внутри активированной venv)
+pip install \
+  "fastapi[standard]" \
+  pydantic \
+  pydantic-settings \
+  pandas \
+  asyncpg \
+  sqlalchemy[asyncio] \
+  alembic \
+  httpx \
+  python-dotenv \
+  uvicorn[standard]
+
+
+### Создаем requirements.txt
+pip freeze > requirements.txt
+
+
+### Структуру классического FastAPI проекта
+my_fastapi_app/
+├── .env                  # пароли, URL БД (НЕ коммитить в git!)
+├── .gitignore            # обязательно добавить venv/ и .env сюда!
+├── requirements.txt      # список зависимостей (pip freeze > requirements.txt)
+├── main.py               # точка входа, создание FastAPI()
+│
+├── venv/                 # 📦 ВИРТУАЛЬНОЕ ОКРУЖЕНИЕ (создается командой python3 -m venv venv)
+│   ├── bin/              # ⚙️ Исполняемые файлы: python, pip, uvicorn и скрипт activate
+│   ├── include/          # 🧠 Заголовочные файлы C (нужны для компиляции пакетов типа psycopg2)
+│   ├── lib/              # 📚 Основные библиотеки
+│   │   └── python3.X/    # Папка с версией вашего Python (например, python3.9)
+│   │       └── site-packages/  # 🎯 САМОЕ ГЛАВНОЕ: здесь лежат все установленные вами пакеты 
+│   │                           # (fastapi, uvicorn, sqlalchemy, pydantic и т.д.)
+│   ├── lib64/            # Симлинк на lib (есть не во всех ОС)
+│   └── pyvenv.cfg        # ⚙️ Конфигурация самого виртуального окружения (путь к системному Python)
+│
+├── app/
+│   ├── __init__.py
+│   ├── config.py         # pydantic-settings (чтение .env)
+│   ├── database.py       # engine, sessionmaker
+│   ├── models.py         # SQLAlchemy модели
+│   ├── schemas.py        # Pydantic схемы
+│   ├── routers/          # эндпоинты по модулям
+│   └── services/         # бизнес-логика
+│
+└── alembic/              # миграции
+    ├── env.py
+    ├── script.py.mako
+    └── versions/         # файлы миграций (001_init.py и т.д.)
+
+
+    
