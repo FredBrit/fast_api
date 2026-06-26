@@ -83,6 +83,31 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 http://your-server-ip:8000/ — увидите {"message": "Hello World"}
 http://your-server-ip:8000/docs — автоматическая Swagger документация
 
+### Выделение проекта в отдельный постоянно работающий сервис без необходиомости удерживать подключение по ssh через терминал
+sudo nano /etc/systemd/system/myfastapi.service
+Пример текста в файле:
+[Unit]
+Description=My FastAPI Application
+After=network.target
+
+[Service]
+User=admin
+Group=admin
+WorkingDirectory=/home/my_fastapi_app
+Environment="PATH=/home/my_fastapi_app/venv/bin"
+# Если нужно передать .env, можно добавить: EnvironmentFile=/home/my_fastapi_app/.env
+ExecStart=/home/my_fastapi_app/venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+sudo systemctl daemon-reload      # Перезагрузка
+sudo systemctl enable myfastapi   # Запускать автоматически при загрузке ОС
+sudo systemctl start myfastapi    # Запустить прямо сейчас
+sudo journalctl -u myfastapi -f   # Просмотр логов
+
+
 ### Для возможности редактирования и сохраения файлов через vscode, может потребоваться накинуть прав на пользователя под которым создавалась папка в проекте
 whoami
 chown -R admin:admin /home/my_fastapi_app
