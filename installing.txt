@@ -6,7 +6,7 @@ dnf install python3-devel libpq-devel python3-virtualenv -y
 # Debian
 apt install python3-pip python3-venv python3-dev libpq-dev -y
 
-### Создание venv
+### Создание venv (лучше создавать в /opt)
 mkdir my_fastapi_app && cd my_fastapi_app
 python3 -m venv venv
 source venv/bin/activate
