@@ -1,0 +1,7 @@
+### Правила (соглашения) написания ручек
+  
+# GET /hotels
+# POST /hotels
+# PUT /hotels/{id}
+# PATCH /hotels/{id}
+# DELETE /hotels/{id}  
