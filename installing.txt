@@ -26,7 +26,7 @@ pip install \
   uvicorn[standard]
 
 
-### Создаем requirements.txt
+### Создаем requirements.txt на основании текущих зависимостей
 pip freeze > requirements.txt
 
 
