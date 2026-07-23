@@ -1,0 +1,26 @@
+# Для автоматического создания необходимых файлов и папок в нужном месте проекта
+alembic init src/migrations
+
+# Запуск пробной миграции
+alembic revision --autogenerate -m "initial migration"
+
+# Посмотреть текущую миграцию
+alembic current
+
+# Посмотреть все миграции с ID и описаниями
+alembic history
+
+# обновиться до конкретной миграции
+alembic upgrade 50aa6b8fe959
+
+# Откатиться до конкретной миграции
+alembic downgrade 50aa6b8fe959
+
+# Обновиться до самой последней миграции
+alembic upgrade head
+
+# Откатиться на одну миграцию назад
+alembic downgrade -1
+
+# Откатить все миграции (очистить базу)
+alembic downgrade base
