@@ -24,3 +24,19 @@ alembic downgrade -1
 
 # Откатить все миграции (очистить базу)
 alembic downgrade base
+
+________________________________________________________________________________________________________________
+
+# При раскоментировании file_template и использовании подпапок нужно указать следуюзие настройки
+# иначе alembic не найдет миграции в подпапках
+
+[alembic]
+# path to migration scripts.
+# this is typically a path given in POSIX (e.g. forward slashes)
+# format, relative to the token %(here)s which refers to the location of this
+# ini file
+script_location = %(here)s/src/migrations
+version_locations = %(here)s/src/migrations/versions
+version_path_separator = os
+recursive_version_locations = true
+file_template = %%(year)d/%%(month).2d/%%(day).2d_%%(hour).2d%%(minute).2d_%%(second).2d_%%(rev)s_%%(slug)s
