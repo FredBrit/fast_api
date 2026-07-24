@@ -1,0 +1,90 @@
+### SELECT
+
+from sqlalchemy import select, func
+from src.models import HotelsORM
+
+# 1. Получить все записи
+stmt = select(HotelsORM)
+result = await session.execute(stmt)
+hotels = result.scalars().all() # Возвращает список объектов
+
+# 2. Получить одну запись по ID (самый быстрый способ)
+hotel = await session.get(HotelsORM, 1) # Вернет объект или None
+
+# 3. Получить одну запись по условию (или None, если не найдено)
+stmt = select(HotelsORM).where(HotelsORM.title == "AZIMUT")
+hotel = await session.scalar(stmt) # Возвращает первый объект или None
+
+# 4. Фильтрация (WHERE)
+stmt = select(HotelsORM).where(HotelsORM.location == "Москва")
+hotels = (await session.execute(stmt)).scalars().all()
+
+# 5. Сортировка (ORDER BY)
+from sqlalchemy import desc
+stmt = select(HotelsORM).order_by(desc(HotelsORM.id)) # или HotelsORM.id.desc()
+
+# 6. Пагинация (LIMIT и OFFSET)
+stmt = select(HotelsORM).limit(10).offset(20)
+
+# 7. Объединение таблиц (JOIN)
+# Предположим, у Room есть hotel_id
+stmt = select(HotelsORM).join(RoomsORM, HotelsORM.id == RoomsORM.hotel_id)
+
+### INSERT
+
+# 1. Добавление одной записи
+new_hotel = HotelsORM(title="Новый отель", location="Сочи")
+session.add(new_hotel)
+await session.commit()
+await session.refresh(new_hotel) # Чтобы получить ID и значения по умолчанию из БД
+
+# 2. Добавление нескольких записей сразу
+hotels = [
+    HotelsORM(title="Отель 1", location="Москва"),
+    HotelsORM(title="Отель 2", location="Казань")
+]
+session.add_all(hotels)
+await session.commit()
+
+
+### UPDATE 
+# Способ А: Через ORM (рекомендуется для сложной логики)
+hotel = await session.get(HotelsORM, 1)
+if hotel:
+    hotel.title = "Обновленное название"
+    await session.commit()
+
+# Способ Б: Массовое обновление (Bulk Update, SQLAlchemy 2.0)
+# Быстрее, но не загружает объекты в память и не триггерит события ORM
+from sqlalchemy import update
+stmt = (
+    update(HotelsORM)
+    .where(HotelsORM.location == "Москва")
+    .values(title="Отель в Москве") # .values() принимает словарь или именованные аргументы
+)
+await session.execute(stmt)
+await session.commit()
+
+
+### DELETE
+# Способ А: Через ORM
+hotel = await session.get(HotelsORM, 1)
+if hotel:
+    await session.delete(hotel)
+    await session.commit()
+
+# Способ Б: Массовое удаление (Bulk Delete)
+from sqlalchemy import delete
+stmt = delete(HotelsORM).where(HotelsORM.location == "Сочи")
+await session.execute(stmt)
+await session.commit()
+
+### Агрегатные функции
+from sqlalchemy import func
+
+# Количество отелей
+stmt = select(func.count(HotelsORM.id))
+total_hotels = await session.scalar(stmt) # Вернет число (int)
+
+# Сумма чего-либо (например, если бы было поле price)
+# stmt = select(func.sum(RoomsORM.price))
