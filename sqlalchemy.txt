@@ -19,14 +19,17 @@ hotel = await session.scalar(stmt) # Возвращает первый объе�
 stmt = select(HotelsORM).where(HotelsORM.location == "Москва")
 hotels = (await session.execute(stmt)).scalars().all()
 
-# 5. Сортировка (ORDER BY)
+# 5. Фильтрация по вхождению подстроки (ilike)
+query = query.where(HotelsORM.title.ilike(f"%{title}%"))
+
+# 6. Сортировка (ORDER BY)
 from sqlalchemy import desc
 stmt = select(HotelsORM).order_by(desc(HotelsORM.id)) # или HotelsORM.id.desc()
 
-# 6. Пагинация (LIMIT и OFFSET)
+# 7. Пагинация (LIMIT и OFFSET)
 stmt = select(HotelsORM).limit(10).offset(20)
 
-# 7. Объединение таблиц (JOIN)
+# 8. Объединение таблиц (JOIN)
 # Предположим, у Room есть hotel_id
 stmt = select(HotelsORM).join(RoomsORM, HotelsORM.id == RoomsORM.hotel_id)
 
