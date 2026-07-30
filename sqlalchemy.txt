@@ -16,20 +16,28 @@ stmt = select(HotelsORM).where(HotelsORM.title == "AZIMUT")
 hotel = await session.scalar(stmt) # Возвращает первый объект или None
 
 # 4. Фильтрация (WHERE)
-stmt = select(HotelsORM).where(HotelsORM.location == "Москва")
+stmt = select(HotelsORM).where(HotelsORM.location == "Москва") или query = select(self.model).where(self.model.email==email)
 hotels = (await session.execute(stmt)).scalars().all()
 
-# 5. Фильтрация по вхождению подстроки (ilike)
+# 5. WHERE с произвольными аргументами **kwargs
+Сначала нужно из kwargs сформировать словарь
+async def get_one_or_none(self, **filters):
+
+        conditions = [getattr(self.model, key) == value for key, value in filters.items()]
+
+        query = select(self.model).where(*conditions)
+
+# 6. Фильтрация по вхождению подстроки (ilike)
 query = query.where(HotelsORM.title.ilike(f"%{title}%"))
 
-# 6. Сортировка (ORDER BY)
+# 7. Сортировка (ORDER BY)
 from sqlalchemy import desc
 stmt = select(HotelsORM).order_by(desc(HotelsORM.id)) # или HotelsORM.id.desc()
 
-# 7. Пагинация (LIMIT и OFFSET)
+# 8. Пагинация (LIMIT и OFFSET)
 stmt = select(HotelsORM).limit(10).offset(20)
 
-# 8. Объединение таблиц (JOIN)
+# 9. Объединение таблиц (JOIN)
 # Предположим, у Room есть hotel_id
 stmt = select(HotelsORM).join(RoomsORM, HotelsORM.id == RoomsORM.hotel_id)
 
