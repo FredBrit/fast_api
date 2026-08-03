@@ -1,0 +1,573 @@
+# =============================================================================
+# SQLAlchemy 2.x — основные типы, ограничения и зависимости для mapped_column()
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 1. Первичный ключ (Primary Key)
+# Создает первичный ключ таблицы.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy.orm import Mapped, mapped_column
+
+id: Mapped[int] = mapped_column(primary_key=True)
+
+
+# -----------------------------------------------------------------------------
+# 2. Автоинкремент
+# Управляет автоматической генерацией значения.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy.orm import Mapped, mapped_column
+
+id: Mapped[int] = mapped_column(
+    primary_key=True,
+    autoincrement=True
+)
+
+
+# -----------------------------------------------------------------------------
+# 3. Внешний ключ (Foreign Key)
+# Создает связь с другой таблицей.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column
+
+room_id: Mapped[int] = mapped_column(
+    ForeignKey("rooms.id")
+)
+
+
+# -----------------------------------------------------------------------------
+# 4. Nullable
+# Разрешает или запрещает NULL.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy.orm import Mapped, mapped_column
+
+name: Mapped[str] = mapped_column(
+    nullable=False
+)
+
+
+# -----------------------------------------------------------------------------
+# 5. Unique
+# Запрещает дублирование значений.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy.orm import Mapped, mapped_column
+
+email: Mapped[str] = mapped_column(
+    unique=True
+)
+
+
+# -----------------------------------------------------------------------------
+# 6. Index
+# Создает индекс.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy.orm import Mapped, mapped_column
+
+username: Mapped[str] = mapped_column(
+    index=True
+)
+
+
+# -----------------------------------------------------------------------------
+# 7. default
+# Значение по умолчанию на стороне Python.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy.orm import Mapped, mapped_column
+
+is_active: Mapped[bool] = mapped_column(
+    default=True
+)
+
+
+# -----------------------------------------------------------------------------
+# 8. insert_default
+# Значение только при INSERT.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy.orm import Mapped, mapped_column
+
+created: Mapped[bool] = mapped_column(
+    insert_default=True
+)
+
+
+# -----------------------------------------------------------------------------
+# 9. server_default
+# Значение по умолчанию задает сама база данных.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import text
+from sqlalchemy.orm import mapped_column
+
+created_at = mapped_column(
+    server_default=text("CURRENT_TIMESTAMP")
+)
+
+
+# -----------------------------------------------------------------------------
+# 10. onupdate
+# Значение обновляется в Python при UPDATE.
+# -----------------------------------------------------------------------------
+
+from datetime import datetime
+from sqlalchemy.orm import mapped_column
+
+updated_at = mapped_column(
+    onupdate=datetime.utcnow
+)
+
+
+# -----------------------------------------------------------------------------
+# 11. server_onupdate
+# Значение обновляется самой базой данных.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import text
+from sqlalchemy.orm import mapped_column
+
+updated_at = mapped_column(
+    server_onupdate=text("CURRENT_TIMESTAMP")
+)
+
+
+# -----------------------------------------------------------------------------
+# 12. comment
+# Комментарий колонки.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy.orm import Mapped, mapped_column
+
+name: Mapped[str] = mapped_column(
+    comment="Имя пользователя"
+)
+
+
+# -----------------------------------------------------------------------------
+# 13. Имя столбца
+# Если имя атрибута отличается от имени колонки.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy.orm import Mapped, mapped_column
+
+user_name: Mapped[str] = mapped_column(
+    "username"
+)
+
+
+# -----------------------------------------------------------------------------
+# 14. Integer
+# Целое число.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import Integer
+from sqlalchemy.orm import mapped_column
+
+age = mapped_column(Integer)
+
+
+# -----------------------------------------------------------------------------
+# 15. BigInteger
+# Большое целое число.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import BigInteger
+from sqlalchemy.orm import mapped_column
+
+views = mapped_column(BigInteger)
+
+
+# -----------------------------------------------------------------------------
+# 16. SmallInteger
+# Маленькое целое число.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import SmallInteger
+from sqlalchemy.orm import mapped_column
+
+level = mapped_column(SmallInteger)
+
+
+# -----------------------------------------------------------------------------
+# 17. String
+# Строка фиксированной максимальной длины.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import String
+from sqlalchemy.orm import mapped_column
+
+name = mapped_column(String(100))
+
+
+# -----------------------------------------------------------------------------
+# 18. Text
+# Длинный текст.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import Text
+from sqlalchemy.orm import mapped_column
+
+description = mapped_column(Text)
+
+
+# -----------------------------------------------------------------------------
+# 19. Boolean
+# Логическое значение.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import Boolean
+from sqlalchemy.orm import mapped_column
+
+is_admin = mapped_column(Boolean)
+
+
+# -----------------------------------------------------------------------------
+# 20. Float
+# Число с плавающей точкой.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import Float
+from sqlalchemy.orm import mapped_column
+
+rating = mapped_column(Float)
+
+
+# -----------------------------------------------------------------------------
+# 21. Numeric / Decimal
+# Денежные и точные значения.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import Numeric
+from sqlalchemy.orm import mapped_column
+
+price = mapped_column(
+    Numeric(10, 2)
+)
+
+
+# -----------------------------------------------------------------------------
+# 22. Date
+# Только дата.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import Date
+from sqlalchemy.orm import mapped_column
+
+birthday = mapped_column(Date)
+
+
+# -----------------------------------------------------------------------------
+# 23. Time
+# Только время.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import Time
+from sqlalchemy.orm import mapped_column
+
+alarm = mapped_column(Time)
+
+
+# -----------------------------------------------------------------------------
+# 24. DateTime
+# Дата и время.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import DateTime
+from sqlalchemy.orm import mapped_column
+
+created = mapped_column(DateTime())
+
+
+# -----------------------------------------------------------------------------
+# 25. TIMESTAMP
+# Timestamp базы данных.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import TIMESTAMP
+from sqlalchemy.orm import mapped_column
+
+created = mapped_column(TIMESTAMP())
+
+
+# -----------------------------------------------------------------------------
+# 26. UUID
+# UUID как первичный ключ или обычная колонка.
+# -----------------------------------------------------------------------------
+
+from uuid import UUID
+from sqlalchemy import UUID as SQLUUID
+from sqlalchemy.orm import Mapped, mapped_column
+
+id: Mapped[UUID] = mapped_column(SQLUUID)
+
+
+# -----------------------------------------------------------------------------
+# 27. JSON
+# JSON-поле.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import JSON
+from sqlalchemy.orm import mapped_column
+
+settings = mapped_column(JSON)
+
+
+# -----------------------------------------------------------------------------
+# 28. LargeBinary
+# Хранение бинарных данных.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import LargeBinary
+from sqlalchemy.orm import mapped_column
+
+avatar = mapped_column(LargeBinary)
+
+
+# -----------------------------------------------------------------------------
+# 29. Enum
+# Перечисление.
+# -----------------------------------------------------------------------------
+
+from enum import Enum
+from sqlalchemy import Enum as SQLEnum
+from sqlalchemy.orm import mapped_column
+
+class Status(Enum):
+    ACTIVE = "active"
+    BLOCKED = "blocked"
+
+status = mapped_column(
+    SQLEnum(Status)
+)
+
+
+# -----------------------------------------------------------------------------
+# 30. Identity
+# Современный способ генерации ID.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import Identity
+from sqlalchemy.orm import mapped_column
+
+id = mapped_column(
+    Identity(start=1, increment=1),
+    primary_key=True
+)
+
+
+# -----------------------------------------------------------------------------
+# 31. Sequence
+# Последовательность (PostgreSQL, Oracle).
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import Sequence
+from sqlalchemy.orm import mapped_column
+
+id = mapped_column(
+    Sequence("user_id_seq"),
+    primary_key=True
+)
+
+
+# -----------------------------------------------------------------------------
+# 32. Computed
+# Вычисляемое поле.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import Computed
+from sqlalchemy.orm import mapped_column
+
+full_name = mapped_column(
+    Computed("first_name || ' ' || last_name")
+)
+
+
+# -----------------------------------------------------------------------------
+# 33. deferred
+# Загружается только при обращении.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy.orm import mapped_column
+
+content = mapped_column(
+    deferred=True
+)
+
+
+# -----------------------------------------------------------------------------
+# 34. active_history
+# Запоминает предыдущее значение.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy.orm import mapped_column
+
+name = mapped_column(
+    active_history=True
+)
+
+
+# -----------------------------------------------------------------------------
+# 35. sort_order
+# Управляет порядком колонок.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy.orm import mapped_column
+
+id = mapped_column(
+    sort_order=-100
+)
+
+
+# -----------------------------------------------------------------------------
+# 36. ForeignKey с CASCADE
+# Удаляет зависимые записи.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import mapped_column
+
+room_id = mapped_column(
+    ForeignKey(
+        "rooms.id",
+        ondelete="CASCADE"
+    )
+)
+
+
+# -----------------------------------------------------------------------------
+# 37. ForeignKey с SET NULL
+# При удалении родителя устанавливает NULL.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import mapped_column
+
+room_id = mapped_column(
+    ForeignKey(
+        "rooms.id",
+        ondelete="SET NULL"
+    ),
+    nullable=True
+)
+
+
+# -----------------------------------------------------------------------------
+# 38. ForeignKey с RESTRICT
+# Запрещает удаление родителя.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import mapped_column
+
+room_id = mapped_column(
+    ForeignKey(
+        "rooms.id",
+        ondelete="RESTRICT"
+    )
+)
+
+
+# -----------------------------------------------------------------------------
+# 39. ForeignKey с CASCADE UPDATE
+# Каскадное обновление ключа.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import mapped_column
+
+room_id = mapped_column(
+    ForeignKey(
+        "rooms.id",
+        onupdate="CASCADE"
+    )
+)
+
+
+# -----------------------------------------------------------------------------
+# 40. Явное имя ограничения ForeignKey.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import mapped_column
+
+room_id = mapped_column(
+    ForeignKey(
+        "rooms.id",
+        name="fk_messages_room"
+    )
+)
+
+
+# -----------------------------------------------------------------------------
+# 41. Composite Primary Key
+# Первичный ключ из нескольких колонок.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy.orm import Mapped, mapped_column
+
+room_id: Mapped[int] = mapped_column(primary_key=True)
+user_id: Mapped[int] = mapped_column(primary_key=True)
+
+
+# -----------------------------------------------------------------------------
+# 42. Composite Unique
+# Уникальность нескольких колонок.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import UniqueConstraint
+
+__table_args__ = (
+    UniqueConstraint(
+        "room_id",
+        "user_id"
+    ),
+)
+
+
+# -----------------------------------------------------------------------------
+# 43. Composite Index
+# Индекс по нескольким колонкам.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import Index
+
+__table_args__ = (
+    Index(
+        "ix_room_user",
+        "room_id",
+        "user_id"
+    ),
+)
+
+
+# -----------------------------------------------------------------------------
+# 44. CheckConstraint
+# Проверка значения.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import CheckConstraint
+
+__table_args__ = (
+    CheckConstraint("age >= 18"),
+)
+
+
+# -----------------------------------------------------------------------------
+# 45. Composite ForeignKey
+# Внешний ключ сразу на несколько колонок.
+# -----------------------------------------------------------------------------
+
+from sqlalchemy import ForeignKeyConstraint
+
+__table_args__ = (
+    ForeignKeyConstraint(
+        ["room_id", "user_id"],
+        ["rooms.id", "users.id"]
+    ),
+)
